@@ -1,24 +1,21 @@
+# -*- encoding: utf-8 -*-
+
 import pymysql as pq
-import json
+
 
 class KuaixunPipeline(object):
-	def __init__(self):
-		self.file =  open('item.jl', 'wb')
-		#数据库连接数据需要填写
-		self.conn = pq.connect(host='xxx.xxx.xxx.xxx', user='xxxx', passwd='xxxx',
-				db='xxxx', charset='utf8')
-		self.cur = self.conn.cursor()
+    def __init__(self):
+        self.conn = pq.connect(host='127.0.0.1', user='root', passwd='root', db='test', charset='utf8')
+        self.cur = self.conn.cursor()
 
-	def process_item(self, item, spider):
-		#line = json.dumps(dict(item)) + "\n"
-		#self.file.write(line)
-		ct = item['ct']
-		title = item['title']
-		content = ''.join(item['content']).strip()
-		sql = 'insert into test (ct, title, content) values (%s, %s, %s)'
-		self.cur.execute(sql,(ct, title, content))
-		res = self.conn.commit()
+    def process_item(self, item, spider):
+        ct = item['ct'].strip()
+        title = item['title'].strip()
+        content = ''.join(item['content']).strip()
+        sql = 'INSERT INTO test (ct, title, content) VALUES (%s, %s, %s)'
+        self.cur.execute(sql, (ct, title, content))
+        self.conn.commit()
 
-	def close_spider(self, spider):
-		self.cur.close()
-		self.conn.close()
+    def close_spider(self, spider):
+        self.cur.close()
+        self.conn.close()

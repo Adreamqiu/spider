@@ -4,17 +4,16 @@ import scrapy
 
 from kuaixun.items import BishijieItem
 
-class BishijieSpider(scrapy.Spider):
-	name = 'bishijie'
-	allowed_domains = ['bishijie.com']
-	start_urls = [
-		'https://www.bishijie.com/kuaixun/'
-	]
 
-	def parse(self, response):
-		for sel in response.xpath('//div[@class="kuaixun_list"]/div/ul'):
-			item = BishijieItem()
-			item['ct'] = sel.xpath('span/text()').extract()
-			item['title'] = sel.xpath('li/h2/a/text()').extract()
-			item['content'] = sel.xpath('li/div/a/text()').extract()
-			yield item
+class BishijieSpider(scrapy.Spider):
+    name = 'bishijie'
+    allowed_domains = ['bishijie.com']
+    start_urls = ['https://www.bishijie.com/kuaixun/']
+
+    def parse(self, response):
+        for sel in response.xpath('//div[@class="content-wrap"]/ul/li/div'):
+            item = BishijieItem()
+            item['ct'] = sel.xpath('a/h3/span/text()').extract_first()
+            item['title'] = sel.xpath('a/h3/text()').extract_first()
+            item['content'] = sel.xpath('div[@class="news-content"]/div[@class="h63"]/text()').extract_first()
+            yield item

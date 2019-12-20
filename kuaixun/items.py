@@ -13,6 +13,7 @@ class KuaixunItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
+
 class BishijieItem(scrapy.Item):
     ct = scrapy.Field()
     title = scrapy.Field()
